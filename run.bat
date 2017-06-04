@@ -1,1 +1,1 @@
-start cmd
+start cmd /k workon Trololo
