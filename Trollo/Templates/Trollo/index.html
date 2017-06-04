@@ -1,0 +1,9 @@
+{% if Object_list %}
+    <ul>
+    {% for obj in Object_list %}
+        <li>{{obj.id}}<br/>{{obj.name}}<br/>{{obj.position}}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No objects are available.</p>
+{% endif %}
