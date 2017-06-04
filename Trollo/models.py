@@ -11,18 +11,26 @@ class Object(models.Model):
 class Project(models.Model):
     Object = models.ForeignKey(Object, on_delete=models.CASCADE)
     description = models.CharField(max_length=200)
+    def __str__(self):
+	    return self.Object.name
 
 class List(models.Model):
     Object = models.ForeignKey(Object, on_delete=models.CASCADE)
-    project_id = models.IntegerField(default=0)
+    project_id = models.IntegerField(default=1)
+    def __str__(self):
+	    return self.Object.name
 	
 class Task(models.Model):
     Object = models.ForeignKey(Object, on_delete=models.CASCADE)
     deadline = models.DateTimeField('Deadline')
-    List_id = models.IntegerField(default=0)
+    List_id = models.IntegerField(default=1)
+    def __str__(self):
+	    return self.Object.name
 	
 class Element(models.Model):
     Object = models.ForeignKey(Object, on_delete=models.CASCADE)
-    Task_id = models.IntegerField(default=0)
+    Task_id = models.IntegerField(default=1)
     type = models.IntegerField(default=0)
+    def __str__(self):
+	    return self.Object.name
 	
