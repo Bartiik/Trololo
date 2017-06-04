@@ -16,7 +16,6 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 urlpatterns = [
-	
     url(r'^admin/', admin.site.urls),
-	url(r'^trollo/', include('Trollo.urls')),
+	url(r'^index', include('Trollo.urls')),
 ]
