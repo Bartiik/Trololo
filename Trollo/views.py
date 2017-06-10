@@ -9,8 +9,9 @@ def index(request):
 	context = { 'Object_list': Object_list,}
 	return HttpResponse(template.render(context,request))
 def sax(request):
+    context = { 'a': 1}
     template = loader.get_template('Trollo/SaxGuy.html')
-    return HttpResponse(template.render(1,request))
+    return HttpResponse(template.render(context,request))
 def project(request,project_id):
     id = project_id
     List_list = List.objects.raw('SELECT * FROM trollo_list WHERE project_id=%s',id)

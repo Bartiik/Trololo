@@ -19,6 +19,13 @@ class List(models.Model):
     project_id = models.IntegerField(default=1)
     def __str__(self):
         return self.Object.name
+    def show(self):
+        name = self.Object.name
+        id = self.project_id
+        s = [str(name), str(id)]
+        return "".join(s)
+    def update(self):
+        self.Object.name = 'gggg'
 	
 class Task(models.Model):
     Object = models.ForeignKey(Object, on_delete=models.CASCADE)
