@@ -3,6 +3,7 @@ import time
 import msvcrt
 from ctypes import *
 from random import randint
+from threading import Thread
 import sys
 enemy_list = []
 bullet_list = []
@@ -10,13 +11,21 @@ box_list = []
 bullets = 0
 enemies = 0
 boxes = 0
-
+clock = 0
 #method which prints given text on given coordinates in console
 def prnt(x, y, text):
      sys.stdout.write("\x1b7\x1b[%d;%df%s\x1b8" % (x, y, text))
      sys.stdout.flush()
      
-     
+def Timer():
+    global clock
+    while True:
+        if clock == 100:
+            clock = 0
+        else:
+            clock+=1
+        time.sleep(0.01)
+    
 class enemy:
     def __init__(self, game, symbol, x, y, speedX):
         self.x = x
@@ -205,7 +214,7 @@ def enemyHit(game, item, x, y, who, dir):
         item.remove()
     if randint(1,100)>80:
         boxNum = reward(game, x,y)
-def change(game, ship, i, goneDown, dir):
+def change(game, ship, goneDown, dir):
     global enemy_list
     global box_list
     global bullet_list
@@ -216,7 +225,7 @@ def change(game, ship, i, goneDown, dir):
     dirY = 0
     speedX = enemy_list[0].sX
     speedBox = 10                        
-    if i%int(refresh_rate/speedX)==0:
+    if clock%int(refresh_rate/speedX)==0:
         for a in enemy_list:
             if a.x == 236:
                 dir = -1
@@ -228,9 +237,6 @@ def change(game, ship, i, goneDown, dir):
                 break
         if dirY == 1:
             for a in reversed(enemy_list):
-##                if game.hitBox[a.y+1][a.x][0] == 3:
-##                    enemyHit(game,a,a.x,a.y,2,0)
-##                else:
                 if a.y+1 == 57:
                     return (goneDown, dir, 1)
                 a.move(0,1)
@@ -250,7 +256,7 @@ def change(game, ship, i, goneDown, dir):
                     else:
                         a.move(-1,0)
             goneDown=0
-    if i%10==0:
+    if clock%int(refresh_rate/speedX)==0:
         for a in box_list:
             
                 
@@ -262,7 +268,7 @@ def change(game, ship, i, goneDown, dir):
                     a.remove()
                 else:
                     a.move()
-    if i%20==0:
+    if clock%int(refresh_rate/speedX)==0:
         for a in bullet_list:
             if a.y-1 == 1:
                 a.remove()
@@ -289,15 +295,20 @@ i = 0
 goneDown = 0
 dir = 1
 defeat = 0
+thread1 = Thread( target=Timer )
+prnt(2,2,3)
+thread1.start()
+prnt(2,2,2)
 while True:
-    if i == 1000:
-        i = 0
+    prnt(5,5,clock)
     if enemies == 0:
         prnt(50,40,'VICTORY')
+        break
     elif defeat == 1:
         prnt(50,40,'DEFEAT')
+        break
     else:
-        (goneDown, dir, defeat) = change(f, ss, i, goneDown, dir)
+        (goneDown, dir, defeat) = change(f, ss, goneDown, dir)
         event = int(button())
         prnt(3,3,str(enemies)+'  ')
         if event==4:
@@ -309,3 +320,4 @@ while True:
         elif event == 1:
             break
  
+thread1.stop()
