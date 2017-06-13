@@ -12,6 +12,7 @@ bullets = 0
 enemies = 0
 boxes = 0
 clock = 0
+
 #method which prints given text on given coordinates in console
 def prnt(x, y, text):
      sys.stdout.write("\x1b7\x1b[%d;%df%s\x1b8" % (x, y, text))
@@ -24,7 +25,7 @@ def Timer():
             clock = 0
         else:
             clock+=1
-        time.sleep(0.01)
+        time.sleep(0.1)
     
 class enemy:
     def __init__(self, game, symbol, x, y, speedX):
@@ -76,7 +77,7 @@ class ship:
              '^ ^']
     x = 119
     y = 60
-    level = 10
+    level = 1
     def __init__(self, game):
         for a in range(3):
             self.game = game
@@ -177,13 +178,12 @@ def fire(game, ship):
         i+=1
         for b in range(a):
             bullets+=1
-            bullet_list.append(bullet(game, ship.x+i+1+2*b-3,ship.y-1-i))
+            bullet_list.append(bullet(game, ship.x+i+1+2*b-4,ship.y-1-i))
             
 
 def spawn(game, x, y, distX, distY, speedX, shape):
     global enemy_list
     global enemies
-    prnt(4,4,'   spawn   ')
     cornerX = int(119-x*(distX+1)/2)
     cornerY = int(27-y*(distY+1)/2)
     enemies+=x*y
@@ -221,11 +221,12 @@ def change(game, ship, goneDown, dir):
     global enemies
     global bullets
     global boxes
+    global clock
     refresh_rate = 1000
     dirY = 0
     speedX = enemy_list[0].sX
-    speedBox = 10                        
-    if clock%int(refresh_rate/speedX)==0:
+    speed = 10
+    if clock%speed==0:
         for a in enemy_list:
             if a.x == 236:
                 dir = -1
@@ -256,7 +257,7 @@ def change(game, ship, goneDown, dir):
                     else:
                         a.move(-1,0)
             goneDown=0
-    if clock%int(refresh_rate/speedX)==0:
+    if clock%(speed/2)==0:
         for a in box_list:
             
                 
@@ -268,7 +269,8 @@ def change(game, ship, goneDown, dir):
                     a.remove()
                 else:
                     a.move()
-    if clock%int(refresh_rate/speedX)==0:
+    if clock%(speed/2)==0:
+        clock+=1
         for a in bullet_list:
             if a.y-1 == 1:
                 a.remove()
@@ -282,30 +284,26 @@ def change(game, ship, goneDown, dir):
                     game.hitBox[a.y][a.x][1] = 0
                     a.move()
     return (goneDown, dir, 0)
-    
-            
-    
 # 0 - empty 1-ship 2-enemy 3-bullet 4-box
 f = GameArea()
 f.print()
 ss = ship(f)
-spawn(f,20,10,5,2,50,'@')
+spawn(f,10,10,2,2,100,'@')
 event=0
 i = 0
 goneDown = 0
 dir = 1
 defeat = 0
 thread1 = Thread( target=Timer )
-prnt(2,2,3)
+
 thread1.start()
-prnt(2,2,2)
+
 while True:
-    prnt(5,5,clock)
     if enemies == 0:
-        prnt(50,40,'VICTORY')
+        prnt(31,115,'VICTORY')
         break
     elif defeat == 1:
-        prnt(50,40,'DEFEAT')
+        prnt(31,115,'DEFEAT')
         break
     else:
         (goneDown, dir, defeat) = change(f, ss, goneDown, dir)
@@ -319,5 +317,3 @@ while True:
             fire(f, ss)
         elif event == 1:
             break
- 
-thread1.stop()
